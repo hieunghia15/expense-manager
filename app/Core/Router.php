@@ -8,49 +8,134 @@ final class Router
 {
     private array $routes = [];
 
-    public function get(string $path, callable $handler): void
-    {
-        $this->add('GET', $path, $handler);
+    public function get(
+        string $path,
+        callable $handler
+    ): void {
+        $this->add(
+            'GET',
+            $path,
+            $handler
+        );
     }
 
-    public function post(string $path, callable $handler): void
-    {
-        $this->add('POST', $path, $handler);
+    public function post(
+        string $path,
+        callable $handler
+    ): void {
+        $this->add(
+            'POST',
+            $path,
+            $handler
+        );
     }
 
-    public function put(string $path, callable $handler): void
-    {
-        $this->add('PUT', $path, $handler);
+    private function add(
+        string $method,
+        string $path,
+        callable $handler
+    ): void {
+        $this->routes[$method][] = [
+            'path' => $path,
+            'handler' => $handler,
+        ];
     }
 
-    public function delete(string $path, callable $handler): void
-    {
-        $this->add('DELETE', $path, $handler);
-    }
+    public function dispatch(
+        string $method,
+        string $uri
+    ): void {
+        $path = parse_url(
+            $uri,
+            PHP_URL_PATH
+        );
 
-    private function add(string $method, string $path, callable $handler): void
-    {
-        $this->routes[$method][$path] = $handler;
-    }
-
-    public function dispatch(string $method, string $uri): void
-    {
-        $path = parse_url($uri, PHP_URL_PATH);
-
-        if ($path === false || $path === null) {
+        if (!is_string($path)) {
             $path = '/';
         }
 
-        $handler = $this->routes[$method][$path] ?? null;
+        $path = rtrim($path, '/');
 
-        if ($handler === null) {
-            http_response_code(404);
+        if ($path === '') {
+            $path = '/';
+        }
 
-            echo '404 - Page Not Found';
+        foreach (
+            $this->routes[$method] ?? []
+            as $route
+        ) {
+            $matches = [];
+
+            $pattern = $this->compilePattern(
+                $route['path']
+            );
+
+            if (
+                preg_match(
+                    $pattern,
+                    $path,
+                    $matches
+                ) !== 1
+            ) {
+                continue;
+            }
+
+            array_shift($matches);
+
+            call_user_func(
+                $route['handler'],
+                ...array_values($matches)
+            );
 
             return;
         }
 
-        call_user_func($handler);
+        http_response_code(404);
+
+        echo '404 - Page Not Found';
+    }
+
+    private function compilePattern(
+        string $path
+    ): string {
+        $path = rtrim($path, '/');
+
+        if ($path === '') {
+            return '#^/$#';
+        }
+
+        $segments = explode(
+            '/',
+            trim($path, '/')
+        );
+
+        $pattern = '';
+
+        foreach ($segments as $segment) {
+            if (
+                preg_match(
+                    '/^\{([a-zA-Z_][a-zA-Z0-9_]*)\}$/',
+                    $segment,
+                    $matches
+                )
+            ) {
+                $name = $matches[1];
+
+                $pattern .= sprintf(
+                    '/(?P<%s>[^/]+)',
+                    $name
+                );
+
+                continue;
+            }
+
+            $pattern .= '/'
+                . preg_quote(
+                    $segment,
+                    '#'
+                );
+        }
+
+        return '#^' . $pattern . '$#';
     }
 }

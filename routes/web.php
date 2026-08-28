@@ -9,35 +9,24 @@ return static function (
     Router $router,
     CategoryController $categoryController
 ): void {
-    $router->get('/', [$categoryController, 'index']);
+    /*
+    |--------------------------------------------------------------------------
+    | Category
+    |--------------------------------------------------------------------------
+    */
 
-    // $router->get(
-    //     '/categories',
-    //     [$categoryController, 'index']
-    // );
+    $router->get(
+        '/',
+        [$categoryController, 'index']
+    );
 
-    // $router->get(
-    //     '/categories/create',
-    //     [$categoryController, 'create']
-    // );
+    $router->get(
+        '/categories/{id}/edit',
+        [$categoryController, 'edit']
+    );
 
-    // $router->post(
-    //     '/categories',
-    //     [$categoryController, 'store']
-    // );
-
-    // $router->get(
-    //     '/categories/edit',
-    //     [$categoryController, 'edit']
-    // );
-
-    // $router->post(
-    //     '/categories/update',
-    //     [$categoryController, 'update']
-    // );
-
-    // $router->post(
-    //     '/categories/delete',
-    //     [$categoryController, 'delete']
-    // );
+    $router->post(
+        '/categories/{id}',
+        [$categoryController, 'update']
+    );
 };

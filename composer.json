@@ -1,0 +1,14 @@
+{
+    "name": "hieu-nghia/expense-manager",
+    "description": "Mini Expense Management built with PHP 8.5 without framework",
+    "type": "project",
+    "require": {
+        "php": "^8.5",
+        "twig/twig": "^3.28"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}

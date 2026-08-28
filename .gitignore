@@ -1,0 +1,8 @@
+# Dependencies
+vendor/
+
+# Storage & Cache
+storage/cache/*
+
+# Environment configuration
+.env

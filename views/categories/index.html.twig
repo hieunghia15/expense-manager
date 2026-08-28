@@ -1,0 +1,68 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    <h2>Danh sách danh mục</h2>
+
+    {% if categories is empty %}
+
+        <p>Chưa có danh mục nào.</p>
+
+    {% else %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên</th>
+                    <th>Loại</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for category in categories %}
+
+                    <tr>
+                        <td>
+                            {{ category.id }}
+                        </td>
+
+                        <td>
+                            {{ category.name }}
+                        </td>
+
+                        <td>
+                            {% if category.type == 'income' %}
+
+                                <span class="income">
+                                    Thu
+                                </span>
+
+                            {% else %}
+
+                                <span class="expense">
+                                    Chi
+                                </span>
+
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ category.created_at }}
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+    {% endif %}
+
+{% endblock %}

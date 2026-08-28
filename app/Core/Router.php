@@ -54,6 +54,13 @@ final class Router
             $path = '/';
         }
 
+        $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+        $basePath = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
+
+        if ($basePath !== '' && str_starts_with($path, $basePath)) {
+            $path = substr($path, strlen($basePath));
+        }
+
         $path = rtrim($path, '/');
 
         if ($path === '') {

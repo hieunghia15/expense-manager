@@ -21,6 +21,21 @@ return static function (
     );
 
     $router->get(
+        '/categories',
+        [$categoryController, 'index']
+    );
+
+    $router->get(
+        '/categories/create',
+        [$categoryController, 'create']
+    );
+
+    $router->post(
+        '/categories/create',
+        [$categoryController, 'store']
+    );
+
+    $router->get(
         '/categories/{id}/edit',
         [$categoryController, 'edit']
     );

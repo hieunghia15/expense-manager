@@ -34,6 +34,94 @@ final class CategoryController extends BaseController
         );
     }
 
+    public function create(): void
+    {
+        $this->render(
+            'categories/create.html.twig',
+            [
+                'title' => 'Add Category',
+                'csrf_token' => Csrf::token(),
+                'flash' => Flash::pull(),
+            ]
+        );
+    }
+
+    public function store(): void
+    {
+        Csrf::validateOrFail(
+            $_POST['_csrf_token'] ?? null
+        );
+
+        $name = trim(
+            (string) ($_POST['name'] ?? '')
+        );
+
+        $type = trim(
+            (string) ($_POST['type'] ?? '')
+        );
+
+        $validator = new Validator();
+
+        $validator
+            ->required(
+                'name',
+                $name,
+                'Category name is required.'
+            )
+            ->string(
+                'name',
+                $name,
+                100,
+                'Category name cannot exceed 100 characters.'
+            )
+            ->required(
+                'type',
+                $type,
+                'Category type is required.'
+            );
+
+        if (
+            !in_array(
+                $type,
+                ['income', 'expense'],
+                true
+            )
+        ) {
+            $validator->addError(
+                'type',
+                'Invalid category type.'
+            );
+        }
+
+        if ($validator->fails()) {
+            $this->render(
+                'categories/create.html.twig',
+                [
+                    'title' => 'Add Category',
+                    'category' => [
+                        'name' => $name,
+                        'type' => $type,
+                    ],
+                    'errors' => $validator->errors(),
+                    'csrf_token' => Csrf::token(),
+                ]
+            );
+
+            return;
+        }
+
+        $this->categoryService->createCategory(
+            $name,
+            $type
+        );
+
+        Flash::success(
+            'Category created successfully.'
+        );
+
+        $this->redirect('/categories');
+    }
+
     public function edit(
         string $id
     ): void {
@@ -56,6 +144,7 @@ final class CategoryController extends BaseController
                 'title' => 'Edit Category',
                 'category' => $category,
                 'csrf_token' => Csrf::token(),
+                'flash' => Flash::pull(),
             ]
         );
     }
@@ -138,10 +227,6 @@ final class CategoryController extends BaseController
             'Category updated successfully.'
         );
 
-        header(
-            'Location: /categories'
-        );
-
-        exit;
+        $this->redirect('/categories');
     }
 }

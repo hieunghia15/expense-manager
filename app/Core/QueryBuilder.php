@@ -749,6 +749,13 @@ final class QueryBuilder
             return $expression;
         }
 
+        if (preg_match(
+            '/^[a-zA-Z_][a-zA-Z0-9_]*\.[a-zA-Z_][a-zA-Z0-9_]*\s+AS\s+[a-zA-Z_][a-zA-Z0-9_]*$/i',
+            $expression
+        )) {
+            return $expression;
+        }
+
         throw new \InvalidArgumentException(
             sprintf(
                 'Invalid column expression: %s',

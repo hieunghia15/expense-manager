@@ -21,4 +21,14 @@ abstract class BaseController
             $data
         );
     }
+
+    protected function redirect(
+        string $url
+    ): never {
+        header(
+            'Location: ' . $url
+        );
+
+        exit;
+    }
 }

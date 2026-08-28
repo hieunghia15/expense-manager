@@ -1,8 +1,11 @@
 # Dependencies
 vendor/
 
-# Storage & Cache
+# Storage & Cache & Logs
 storage/cache/*
+storage/logs/*.log
+storage/logs/.gitkeep
+storage/cache/.gitkeep
 
 # Environment configuration
 .env

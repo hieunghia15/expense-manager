@@ -28,6 +28,8 @@ final class QueryBuilder
 
     private ?int $offsetValue = null;
 
+    private int $parameterIndex = 0;
+
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
@@ -97,7 +99,8 @@ final class QueryBuilder
             );
         }
 
-        $placeholder = $this->createPlaceholder('where');
+        $parameter = $this->createPlaceholder('where');
+        $placeholder = ':' . $parameter;
 
         $this->wheres[] = sprintf(
             '%s %s %s',
@@ -136,7 +139,8 @@ final class QueryBuilder
         $placeholders = [];
 
         foreach ($values as $value) {
-            $placeholder = $this->createPlaceholder('in');
+            $parameter = $this->createPlaceholder('in');
+            $placeholder = ':' . $parameter;
 
             $placeholders[] = $placeholder;
             $this->bindings[$placeholder] = $value;
@@ -388,9 +392,8 @@ final class QueryBuilder
                 (string) $column
             );
 
-            $placeholder = $this->createPlaceholder(
-                'insert'
-            );
+            $parameter = $this->createPlaceholder('insert');
+            $placeholder = ':' . $parameter;
 
             $columns[] = $column;
             $placeholders[] = $placeholder;
@@ -436,9 +439,8 @@ final class QueryBuilder
                 (string) $column
             );
 
-            $placeholder = $this->createPlaceholder(
-                'update'
-            );
+            $parameter = $this->createPlaceholder('update');
+            $placeholder = ':' . $parameter;
 
             $setStatements[] = sprintf(
                 '%s = %s',
@@ -658,9 +660,7 @@ final class QueryBuilder
     private function createPlaceholder(
         string $prefix
     ): string {
-        return ':' . $prefix . '_' . count(
-            $this->bindings
-        );
+        return $prefix . '_' . (++$this->parameterIndex);
     }
 
     /**

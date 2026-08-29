@@ -3,69 +3,149 @@
 {% block title %}{{ title is defined ? title : 'Danh sách danh mục' }}{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<!-- Page Header & Actions -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
     <div>
-        <h2 class="h3 mb-0 text-gray-800 fw-bold">Danh sách danh mục</h2>
-        <p class="text-muted mb-0">Quản lý các danh mục thu và chi của bạn</p>
+        <h1 class="h3 fw-bold text-dark mb-1">Danh mục thu chi</h1>
+        <p class="text-muted small mb-0">Quản lý phân loại chi tiêu và nguồn thu nhập của bạn</p>
     </div>
-    <a href="/categories/create" class="btn btn-primary shadow-sm">
-        <i class="bi bi-plus-lg me-1"></i> Thêm danh mục
-    </a>
+    <div>
+        <a href="/categories/create" class="btn btn-green px-3 py-2 rounded-3">
+            <i class="bi bi-plus-lg me-1"></i> Thêm danh mục
+        </a>
+    </div>
 </div>
 
-<div class="card shadow-sm border-0">
-    <div class="card-body p-0">
-        {% if categories is not defined or categories is empty %}
-            <div class="text-center py-5">
-                <i class="bi bi-folder-x display-4 text-muted mb-3 d-block"></i>
-                <h5 class="text-muted">Chưa có danh mục nào</h5>
-                <p class="text-muted small">Hãy thêm danh mục đầu tiên để bắt đầu quản lý chi tiêu.</p>
-                <a href="/categories/create" class="btn btn-sm btn-outline-primary mt-2">
-                    <i class="bi bi-plus-lg me-1"></i> Thêm danh mục mới
-                </a>
-            </div>
-        {% else %}
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col" class="ps-4" style="width: 80px;"># ID</th>
-                            <th scope="col">Tên danh mục</th>
-                            <th scope="col">Loại danh mục</th>
-                            <th scope="col">Ngày tạo</th>
-                            <th scope="col" class="text-end pe-4" style="width: 120px;">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for category in categories %}
+<!-- Tabs Navigation -->
+<ul class="nav nav-pills nav-pills-custom gap-2 mb-4 border-bottom pb-3" id="categoryTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active d-flex align-items-center" id="expense-tab" data-bs-toggle="tab" data-bs-target="#expense-pane" type="button" role="tab" aria-controls="expense-pane" aria-selected="true">
+            <i class="bi bi-arrow-up-right-circle-fill text-danger me-2"></i> Chi phí (Expenses)
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link d-flex align-items-center" id="income-tab" data-bs-toggle="tab" data-bs-target="#income-pane" type="button" role="tab" aria-controls="income-pane" aria-selected="false">
+            <i class="bi bi-arrow-down-left-circle-fill text-success me-2"></i> Thu nhập (Income)
+        </button>
+    </li>
+</ul>
+
+<!-- Tabs Content -->
+<div class="tab-content" id="categoryTabContent">
+    <!-- 1. Expenses Tab Pane -->
+    <div class="tab-pane fade show active" id="expense-pane" role="tabpanel" aria-labelledby="expense-tab" tabindex="0">
+        <div class="card-custom overflow-hidden">
+            {% set expense_count = 0 %}
+            {% if categories is defined and categories is not empty %}
+                {% for category in categories %}
+                    {% if category.type == 'expense' %}
+                        {% set expense_count = expense_count + 1 %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if expense_count == 0 %}
+                <div class="text-center py-5 px-3">
+                    <i class="bi bi-receipt-cutoff display-4 text-muted opacity-50 mb-3 d-block"></i>
+                    <h6 class="fw-semibold text-dark mb-1">Chưa có danh mục chi phí nào</h6>
+                    <p class="text-muted small mb-3">Tạo danh mục chi phí để bắt đầu theo dõi khoản chi.</p>
+                    <a href="/categories/create" class="btn btn-sm btn-outline-green rounded-2">
+                        <i class="bi bi-plus-lg me-1"></i> Thêm danh mục mới
+                    </a>
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
                             <tr>
-                                <th scope="row" class="ps-4 text-secondary">{{ category.id }}</th>
-                                <td class="fw-semibold text-dark">{{ category.name }}</td>
-                                <td>
-                                    {% if category.type == 'income' %}
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
-                                            <i class="bi bi-arrow-down-left-circle me-1"></i> Thu nhập
-                                        </span>
-                                    {% else %}
-                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">
-                                            <i class="bi bi-arrow-up-right-circle me-1"></i> Chi phí
-                                        </span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-muted small">
-                                    {{ category.created_at is defined and category.created_at ? category.created_at|date("Y-m-d H:i") : '-' }}
-                                </td>
-                                <td class="text-end pe-4">
-                                    <a href="/categories/{{ category.id }}/edit" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="Chỉnh sửa">
-                                        <i class="bi bi-pencil me-1"></i> Sửa
-                                    </a>
-                                </td>
+                                <th scope="col" class="ps-4 py-3 text-muted fw-semibold small" style="width: 100px;">ID</th>
+                                <th scope="col" class="py-3 text-muted fw-semibold small">Tên danh mục</th>
+                                <th scope="col" class="py-3 text-muted fw-semibold small" style="width: 160px;">Loại</th>
+                                <th scope="col" class="text-end pe-4 py-3 text-muted fw-semibold small" style="width: 120px;">Thao tác</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
+                        </thead>
+                        <tbody class="border-top-0">
+                            {% for category in categories %}
+                                {% if category.type == 'expense' %}
+                                    <tr>
+                                        <td class="ps-4 text-muted font-monospace small">#{{ category.id }}</td>
+                                        <td class="fw-semibold text-dark">{{ category.name }}</td>
+                                        <td>
+                                            <span class="badge badge-expense rounded-pill px-2.5 py-1.5 font-normal small">
+                                                Chi phí
+                                            </span>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <a href="/categories/{{ category.id }}/edit" class="btn btn-sm btn-light border text-secondary rounded-2">
+                                                <i class="bi bi-pencil me-1"></i> Sửa
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- 2. Income Tab Pane -->
+    <div class="tab-pane fade" id="income-pane" role="tabpanel" aria-labelledby="income-tab" tabindex="0">
+        <div class="card-custom overflow-hidden">
+            {% set income_count = 0 %}
+            {% if categories is defined and categories is not empty %}
+                {% for category in categories %}
+                    {% if category.type == 'income' %}
+                        {% set income_count = income_count + 1 %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if income_count == 0 %}
+                <div class="text-center py-5 px-3">
+                    <i class="bi bi-piggy-bank display-4 text-muted opacity-50 mb-3 d-block"></i>
+                    <h6 class="fw-semibold text-dark mb-1">Chưa có danh mục thu nhập nào</h6>
+                    <p class="text-muted small mb-3">Tạo danh mục thu nhập để quản lý nguồn tiền của bạn.</p>
+                    <a href="/categories/create" class="btn btn-sm btn-outline-green rounded-2">
+                        <i class="bi bi-plus-lg me-1"></i> Thêm danh mục mới
+                    </a>
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" class="ps-4 py-3 text-muted fw-semibold small" style="width: 100px;">ID</th>
+                                <th scope="col" class="py-3 text-muted fw-semibold small">Tên danh mục</th>
+                                <th scope="col" class="py-3 text-muted fw-semibold small" style="width: 160px;">Loại</th>
+                                <th scope="col" class="text-end pe-4 py-3 text-muted fw-semibold small" style="width: 120px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="border-top-0">
+                            {% for category in categories %}
+                                {% if category.type == 'income' %}
+                                    <tr>
+                                        <td class="ps-4 text-muted font-monospace small">#{{ category.id }}</td>
+                                        <td class="fw-semibold text-dark">{{ category.name }}</td>
+                                        <td>
+                                            <span class="badge badge-income rounded-pill px-2.5 py-1.5 font-normal small">
+                                                Thu nhập
+                                            </span>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <a href="/categories/{{ category.id }}/edit" class="btn btn-sm btn-light border text-secondary rounded-2">
+                                                <i class="bi bi-pencil me-1"></i> Sửa
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,79 @@
+:root {
+    --brand-green: #10b981;
+    --brand-green-dark: #059669;
+    --brand-green-light: #ecfdf5;
+    --brand-green-border: #a7f3d0;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #f8fafc;
+    color: #334155;
+}
+
+.navbar-custom {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.btn-green {
+    background-color: var(--brand-green);
+    color: #ffffff;
+    border: none;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-green:hover, .btn-green:focus {
+    background-color: var(--brand-green-dark);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.btn-outline-green {
+    color: var(--brand-green-dark);
+    border-color: var(--brand-green-border);
+    background-color: var(--brand-green-light);
+    font-weight: 500;
+}
+
+.btn-outline-green:hover {
+    background-color: var(--brand-green);
+    color: #ffffff;
+    border-color: var(--brand-green);
+}
+
+.card-custom {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+}
+
+.nav-pills-custom .nav-link {
+    color: #64748b;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: all 0.15s ease;
+}
+
+.nav-pills-custom .nav-link.active {
+    background-color: var(--brand-green-light);
+    color: var(--brand-green-dark);
+    font-weight: 600;
+    border: 1px solid var(--brand-green-border);
+}
+
+.badge-income {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.badge-expense {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+

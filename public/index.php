@@ -3,9 +3,8 @@
 declare(strict_types=1);
 
 use App\Controllers\CategoryController;
-use App\Controllers\TransactionController;
+use App\Core\Config;
 use App\Core\Database;
-use App\Core\Env;
 use App\Core\ExceptionHandler;
 use App\Core\Logger;
 use App\Core\QueryBuilderFactory;
@@ -13,21 +12,31 @@ use App\Core\Router;
 use App\Core\Session;
 use App\Core\View;
 use App\Models\CategoryModel;
-use App\Models\TransactionModel;
 use App\Services\CategoryService;
-use App\Services\TransactionService;
+use Dotenv\Dotenv;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
-| Environment
+| Environment & Config
 |--------------------------------------------------------------------------
 */
+$basePath = dirname(__DIR__);
 
-Env::load(
-    dirname(__DIR__) . '/.env'
-);
+$dotenv = Dotenv::createImmutable($basePath);
+$dotenv->load();
+
+$dotenv->required([
+    'APP_ENV',
+    'APP_URL',
+    'DB_HOST',
+    'DB_PORT',
+    'DB_DATABASE',
+    'DB_USERNAME',
+]);
+
+Config::load($basePath . '/config');
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +53,7 @@ Session::start();
 */
 
 $logger = new Logger(
-    dirname(__DIR__) . '/storage/logs/app.log'
+    $basePath . '/storage/logs/app.log'
 );
 
 /*
@@ -55,7 +64,7 @@ $logger = new Logger(
 
 $exceptionHandler = new ExceptionHandler(
     $logger,
-    Env::get('APP_DEBUG', 'false') === 'true'
+    (bool) Config::get('app.debug', false)
 );
 
 $exceptionHandler->register();
@@ -87,7 +96,7 @@ $queryBuilderFactory = new QueryBuilderFactory(
 */
 
 $view = new View(
-    dirname(__DIR__) . '/views'
+    $basePath . '/views'
 );
 
 /*
@@ -129,7 +138,7 @@ $categoryController = new CategoryController(
 
 $router = new Router();
 
-$routes = require dirname(__DIR__) . '/routes/web.php';
+$routes = require $basePath . '/routes/web.php';
 
 $routes(
     $router,

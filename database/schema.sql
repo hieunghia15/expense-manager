@@ -18,25 +18,25 @@ CREATE TABLE categories (
   COLLATE=utf8mb4_unicode_ci;
 
 
-CREATE TABLE transactions (
+CREATE TABLE expenses (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     category_id BIGINT UNSIGNED NOT NULL,
     amount DECIMAL(15, 2) NOT NULL,
-    transaction_date DATE NOT NULL,
+    expense_date DATE NOT NULL,
     note VARCHAR(255) NULL,
     created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_transactions_category
+    CONSTRAINT fk_expenses_category
         FOREIGN KEY (category_id)
         REFERENCES categories(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
 
-    INDEX idx_transactions_category_id (category_id),
-    INDEX idx_transactions_date (transaction_date),
-    INDEX idx_transactions_category_date (category_id, transaction_date)
+    INDEX idx_expenses_category_id (category_id),
+    INDEX idx_expenses_date (expense_date),
+    INDEX idx_expenses_category_date (category_id, expense_date)
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;

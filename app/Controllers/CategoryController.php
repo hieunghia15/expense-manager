@@ -29,6 +29,7 @@ final class CategoryController extends BaseController
             [
                 'title' => 'Categories',
                 'categories' => $categories,
+                'csrf_token' => Csrf::token(),
                 'flash' => Flash::pull(),
             ]
         );
@@ -166,6 +167,26 @@ final class CategoryController extends BaseController
             (string) ($_POST['type'] ?? '')
         );
 
+        $category = $this->categoryService
+            ->getCategory($categoryId);
+        if ($category === null) {
+            $this->render(
+                'categories/edit.html.twig',
+                [
+                    'title' => 'Edit Category',
+                    'category' => [
+                        'id' => $categoryId,
+                        'name' => $name,
+                        'type' => $type,
+                    ],
+                    'errors' => 'Category not found',
+                    'csrf_token' => Csrf::token(),
+                ]
+            );
+
+            return;
+        }
+
         $validator = new Validator();
 
         $validator
@@ -228,5 +249,37 @@ final class CategoryController extends BaseController
         );
 
         $this->redirect('/categories');
+    }
+
+    public function delete(
+        string $id
+    ): void {
+        Csrf::validateOrFail(
+            $_POST['_csrf_token'] ?? null
+        );
+        $categoryId = (int) $id;
+        $category = $this->categoryService
+            ->getCategory($categoryId);
+        if ($category === null) {
+            $this->render(
+                'categories/edit.html.twig',
+                [
+                    'title' => 'Edit Category',
+                    'errors' => 'Category not found',
+                    'csrf_token' => Csrf::token(),
+                ]
+            );
+
+            return;
+        }
+
+        $this->categoryService->deleteCategory($categoryId);
+
+        Flash::success(
+            'Category deleted successfully.'
+        );
+
+        $this->redirect('/categories');
+
     }
 }

@@ -44,4 +44,9 @@ return static function (
         '/categories/{id}',
         [$categoryController, 'update']
     );
+
+    $router->post(
+        '/categories/{id}/delete',
+        [$categoryController, 'delete']
+    );
 };

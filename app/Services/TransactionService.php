@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Core\Database;
-use App\Models\TransactionModel;
+use App\Models\ExpenseModel;
 
-final class TransactionService
+final class ExpenseService
 {
     public function __construct(
         private Database $database,
-        private TransactionModel $transactionModel
+        private ExpenseModel $expenseModel
     ) {}
 
-    public function createTransaction(
+    public function createExpense(
         int $categoryId,
         float $amount,
         string $date,
@@ -32,13 +32,13 @@ final class TransactionService
             );
         }
 
-        $this->database->beginTransaction();
+        $this->database->beginExpense();
 
         try {
-            $transactionId = $this->transactionModel->create([
+            $expenseId = $this->expenseModel->create([
                 'category_id' => $categoryId,
                 'amount' => $amount,
-                'transaction_date' => $date,
+                'expense_date' => $date,
                 'note' => $note,
             ]);
 
@@ -48,9 +48,9 @@ final class TransactionService
 
             $this->database->commit();
 
-            return $transactionId;
+            return $expenseId;
         } catch (\Throwable $exception) {
-            if ($this->database->inTransaction()) {
+            if ($this->database->inExpense()) {
                 $this->database->rollBack();
             }
 

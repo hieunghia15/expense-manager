@@ -3,6 +3,9 @@
 {% block title %}{{ title is defined ? title : 'Danh sách danh mục' }}{% endblock %}
 
 {% block content %}
+<!-- CSRF Token for AJAX requests -->
+<input type="hidden" id="csrf_token" value="{{ csrf_token is defined ? csrf_token : '' }}">
+
 <!-- Page Header & Actions -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
     <div>
@@ -61,7 +64,7 @@
                                 <th scope="col" class="ps-4 py-3 text-muted fw-semibold small" style="width: 100px;">ID</th>
                                 <th scope="col" class="py-3 text-muted fw-semibold small">Tên danh mục</th>
                                 <th scope="col" class="py-3 text-muted fw-semibold small" style="width: 160px;">Loại</th>
-                                <th scope="col" class="text-end pe-4 py-3 text-muted fw-semibold small" style="width: 120px;">Thao tác</th>
+                                <th scope="col" class="text-end pe-4 py-3 text-muted fw-semibold small" style="width: 160px;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody class="border-top-0">
@@ -76,9 +79,12 @@
                                             </span>
                                         </td>
                                         <td class="text-end pe-4">
-                                            <a href="/categories/{{ category.id }}/edit" class="btn btn-sm btn-light border text-secondary rounded-2">
+                                            <a href="/categories/{{ category.id }}/edit" class="btn btn-sm btn-light border text-secondary rounded-2 me-1">
                                                 <i class="bi bi-pencil me-1"></i> Sửa
                                             </a>
+                                            <button type="button" class="btn btn-sm btn-light border text-danger rounded-2 btn-delete-category" data-id="{{ category.id }}" data-name="{{ category.name }}">
+                                                <i class="bi bi-trash me-1"></i> Xoá
+                                            </button>
                                         </td>
                                     </tr>
                                 {% endif %}
@@ -119,7 +125,7 @@
                                 <th scope="col" class="ps-4 py-3 text-muted fw-semibold small" style="width: 100px;">ID</th>
                                 <th scope="col" class="py-3 text-muted fw-semibold small">Tên danh mục</th>
                                 <th scope="col" class="py-3 text-muted fw-semibold small" style="width: 160px;">Loại</th>
-                                <th scope="col" class="text-end pe-4 py-3 text-muted fw-semibold small" style="width: 120px;">Thao tác</th>
+                                <th scope="col" class="text-end pe-4 py-3 text-muted fw-semibold small" style="width: 160px;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody class="border-top-0">
@@ -134,9 +140,12 @@
                                             </span>
                                         </td>
                                         <td class="text-end pe-4">
-                                            <a href="/categories/{{ category.id }}/edit" class="btn btn-sm btn-light border text-secondary rounded-2">
+                                            <a href="/categories/{{ category.id }}/edit" class="btn btn-sm btn-light border text-secondary rounded-2 me-1">
                                                 <i class="bi bi-pencil me-1"></i> Sửa
                                             </a>
+                                            <button type="button" class="btn btn-sm btn-light border text-danger rounded-2 btn-delete-category" data-id="{{ category.id }}" data-name="{{ category.name }}">
+                                                <i class="bi bi-trash me-1"></i> Xoá
+                                            </button>
                                         </td>
                                     </tr>
                                 {% endif %}
@@ -148,4 +157,54 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function () {
+    // Tab State Persistence
+    const activeTabKey = 'activeCategoryTab';
+
+    $('#categoryTabs button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+        localStorage.setItem(activeTabKey, e.target.id);
+    });
+
+    const savedTabId = localStorage.getItem(activeTabKey);
+    if (savedTabId) {
+        const tabEl = document.getElementById(savedTabId);
+        if (tabEl && window.bootstrap && window.bootstrap.Tab) {
+            bootstrap.Tab.getOrCreateInstance(tabEl).show();
+        }
+    }
+
+    // AJAX Category Delete with jQuery
+    $('.btn-delete-category').on('click', function (e) {
+        e.preventDefault();
+
+        const $btn = $(this);
+        const categoryId = $btn.data('id');
+        const categoryName = $btn.data('name');
+        const csrfToken = $('#csrf_token').val();
+
+        if (!confirm('Bạn có chắc chắn muốn xóa danh mục "' + categoryName + '"?')) {
+            return;
+        }
+
+        $.ajax({
+            url: '/categories/' + categoryId + '/delete',
+            type: 'POST',
+            data: {
+                _csrf_token: csrfToken
+            },
+            success: function () {
+                window.location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error deleting category:', error);
+                alert('Đã xảy ra lỗi khi xóa danh mục.');
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

@@ -51,7 +51,7 @@ final class Database
 
     public function commit(): void
     {
-        if (!$this->connection->inTransaction()) {
+        if (! $this->connection->inTransaction()) {
             throw new \LogicException(
                 'No active transaction to commit.'
             );
@@ -62,7 +62,7 @@ final class Database
 
     public function rollBack(): void
     {
-        if (!$this->connection->inTransaction()) {
+        if (! $this->connection->inTransaction()) {
             throw new \LogicException(
                 'No active transaction to roll back.'
             );

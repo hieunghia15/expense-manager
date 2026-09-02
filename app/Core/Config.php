@@ -10,7 +10,7 @@ final class Config
 
     public static function load(string $directory): void
     {
-        foreach (glob($directory . '/*.php') as $file) {
+        foreach (glob($directory.'/*.php') as $file) {
             $key = basename($file, '.php');
 
             self::$items[$key] = require $file;
@@ -24,7 +24,7 @@ final class Config
         $value = self::$items;
 
         foreach ($segments as $segment) {
-            if (!is_array($value) || !array_key_exists($segment, $value)) {
+            if (! is_array($value) || ! array_key_exists($segment, $value)) {
                 return $default;
             }
 

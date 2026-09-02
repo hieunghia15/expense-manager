@@ -12,7 +12,7 @@ final class Csrf
     {
         $token = Session::get(self::SESSION_KEY);
 
-        if (!is_string($token) || $token === '') {
+        if (! is_string($token) || $token === '') {
             $token = bin2hex(
                 random_bytes(32)
             );
@@ -34,8 +34,8 @@ final class Csrf
         );
 
         if (
-            !is_string($token)
-            || !is_string($sessionToken)
+            ! is_string($token)
+            || ! is_string($sessionToken)
         ) {
             return false;
         }
@@ -49,7 +49,7 @@ final class Csrf
     public static function validateOrFail(
         ?string $token
     ): void {
-        if (!self::validate($token)) {
+        if (! self::validate($token)) {
             throw new \RuntimeException(
                 'Invalid CSRF token.'
             );

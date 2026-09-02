@@ -11,7 +11,7 @@ final class Logger
     ) {
         $directory = dirname($logFile);
 
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             mkdir(
                 $directory,
                 0755,
@@ -70,7 +70,7 @@ final class Logger
             : '';
 
         $line = sprintf(
-            "[%s] %s %s %s%s",
+            '[%s] %s %s %s%s',
             $timestamp,
             $level,
             $message,

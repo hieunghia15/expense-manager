@@ -26,7 +26,7 @@ abstract class BaseController
         string $url
     ): never {
         header(
-            'Location: ' . $url
+            'Location: '.$url
         );
 
         exit;

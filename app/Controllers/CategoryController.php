@@ -61,7 +61,7 @@ final class CategoryController extends BaseController
             (string) ($_POST['type'] ?? '')
         );
 
-        $validator = new Validator();
+        $validator = new Validator;
 
         $validator
             ->required(
@@ -82,7 +82,7 @@ final class CategoryController extends BaseController
             );
 
         if (
-            !in_array(
+            ! in_array(
                 $type,
                 ['income', 'expense'],
                 true
@@ -187,7 +187,7 @@ final class CategoryController extends BaseController
             return;
         }
 
-        $validator = new Validator();
+        $validator = new Validator;
 
         $validator
             ->required(
@@ -208,7 +208,7 @@ final class CategoryController extends BaseController
             );
 
         if (
-            !in_array(
+            ! in_array(
                 $type,
                 ['income', 'expense'],
                 true

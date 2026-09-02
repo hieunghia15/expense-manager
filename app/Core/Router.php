@@ -50,7 +50,7 @@ final class Router
             PHP_URL_PATH
         );
 
-        if (!is_string($path)) {
+        if (! is_string($path)) {
             $path = '/';
         }
 
@@ -68,8 +68,7 @@ final class Router
         }
 
         foreach (
-            $this->routes[$method] ?? []
-            as $route
+            $this->routes[$method] ?? [] as $route
         ) {
             $matches = [];
 
@@ -137,12 +136,12 @@ final class Router
             }
 
             $pattern .= '/'
-                . preg_quote(
+                .preg_quote(
                     $segment,
                     '#'
                 );
         }
 
-        return '#^' . $pattern . '$#';
+        return '#^'.$pattern.'$#';
     }
 }

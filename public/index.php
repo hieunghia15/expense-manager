@@ -15,7 +15,7 @@ use App\Core\View;
 use App\Services\CategoryService;
 use Dotenv\Dotenv;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +36,7 @@ $dotenv->required([
     'DB_USERNAME',
 ]);
 
-Config::load($basePath . '/config');
+Config::load($basePath.'/config');
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +53,7 @@ Session::start();
 */
 
 $logger = new Logger(
-    $basePath . '/storage/logs/app.log'
+    $basePath.'/storage/logs/app.log'
 );
 
 /*
@@ -75,7 +75,7 @@ $exceptionHandler->register();
 |--------------------------------------------------------------------------
 */
 
-$database = new Database();
+$database = new Database;
 
 $pdo = $database->getConnection();
 
@@ -96,7 +96,7 @@ $queryBuilderFactory = new QueryBuilderFactory(
 */
 
 $view = new View(
-    $basePath . '/views'
+    $basePath.'/views'
 );
 
 /*
@@ -113,7 +113,7 @@ BaseModel::setFactory($queryBuilderFactory);
 |--------------------------------------------------------------------------
 */
 
-$categoryService = new CategoryService();
+$categoryService = new CategoryService;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,9 +132,9 @@ $categoryController = new CategoryController(
 |--------------------------------------------------------------------------
 */
 
-$router = new Router();
+$router = new Router;
 
-$routes = require $basePath . '/routes/web.php';
+$routes = require $basePath.'/routes/web.php';
 
 $routes(
     $router,

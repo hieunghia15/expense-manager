@@ -29,7 +29,7 @@ final class Validator
         int $maxLength,
         string $message
     ): self {
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             $this->errors[$field][] = $message;
 
             return $this;
@@ -65,7 +65,7 @@ final class Validator
         string $message
     ): self {
         if (
-            !is_numeric($value)
+            ! is_numeric($value)
             || (float) $value <= 0
         ) {
             $this->errors[$field][] = $message;
@@ -79,7 +79,7 @@ final class Validator
         mixed $value,
         string $message
     ): self {
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             $this->errors[$field][] = $message;
 
             return $this;
@@ -93,7 +93,7 @@ final class Validator
         $valid = $date !== false
             && $date->format('Y-m-d') === $value;
 
-        if (!$valid) {
+        if (! $valid) {
             $this->errors[$field][] = $message;
         }
 

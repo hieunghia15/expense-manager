@@ -101,7 +101,7 @@ final class ExceptionHandler
             E_COMPILE_ERROR,
         ];
 
-        if (!in_array(
+        if (! in_array(
             $error['type'],
             $fatalTypes,
             true

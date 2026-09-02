@@ -90,7 +90,7 @@ final class QueryBuilder
             'NOT LIKE',
         ];
 
-        if (!in_array($operator, $allowedOperators, true)) {
+        if (! in_array($operator, $allowedOperators, true)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Invalid operator: %s',
@@ -100,7 +100,7 @@ final class QueryBuilder
         }
 
         $parameter = $this->createPlaceholder('where');
-        $placeholder = ':' . $parameter;
+        $placeholder = ':'.$parameter;
 
         $this->wheres[] = sprintf(
             '%s %s %s',
@@ -140,7 +140,7 @@ final class QueryBuilder
 
         foreach ($values as $value) {
             $parameter = $this->createPlaceholder('in');
-            $placeholder = ':' . $parameter;
+            $placeholder = ':'.$parameter;
 
             $placeholders[] = $placeholder;
             $this->bindings[$placeholder] = $value;
@@ -192,7 +192,7 @@ final class QueryBuilder
             '<=',
         ];
 
-        if (!in_array($operator, $allowedOperators, true)) {
+        if (! in_array($operator, $allowedOperators, true)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Invalid JOIN operator: %s',
@@ -241,7 +241,7 @@ final class QueryBuilder
             '<=',
         ];
 
-        if (!in_array($operator, $allowedOperators, true)) {
+        if (! in_array($operator, $allowedOperators, true)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Invalid JOIN operator: %s',
@@ -294,7 +294,7 @@ final class QueryBuilder
 
         $direction = strtoupper(trim($direction));
 
-        if (!in_array($direction, ['ASC', 'DESC'], true)) {
+        if (! in_array($direction, ['ASC', 'DESC'], true)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Invalid order direction: %s',
@@ -393,7 +393,7 @@ final class QueryBuilder
             );
 
             $parameter = $this->createPlaceholder('insert');
-            $placeholder = ':' . $parameter;
+            $placeholder = ':'.$parameter;
 
             $columns[] = $column;
             $placeholders[] = $placeholder;
@@ -440,7 +440,7 @@ final class QueryBuilder
             );
 
             $parameter = $this->createPlaceholder('update');
-            $placeholder = ':' . $parameter;
+            $placeholder = ':'.$parameter;
 
             $setStatements[] = sprintf(
                 '%s = %s',
@@ -575,7 +575,7 @@ final class QueryBuilder
         if ($this->groups !== []) {
             throw new \LogicException(
                 'Pagination count with GROUP BY '
-                    . 'is not supported by this QueryBuilder.'
+                    .'is not supported by this QueryBuilder.'
             );
         }
 
@@ -603,25 +603,25 @@ final class QueryBuilder
         $sql .= $this->buildWhere();
 
         if ($this->groups !== []) {
-            $sql .= ' GROUP BY ' . implode(
+            $sql .= ' GROUP BY '.implode(
                 ', ',
                 $this->groups
             );
         }
 
         if ($this->orders !== []) {
-            $sql .= ' ORDER BY ' . implode(
+            $sql .= ' ORDER BY '.implode(
                 ', ',
                 $this->orders
             );
         }
 
         if ($this->limitValue !== null) {
-            $sql .= ' LIMIT ' . $this->limitValue;
+            $sql .= ' LIMIT '.$this->limitValue;
         }
 
         if ($this->offsetValue !== null) {
-            $sql .= ' OFFSET ' . $this->offsetValue;
+            $sql .= ' OFFSET '.$this->offsetValue;
         }
 
         return $sql;
@@ -636,7 +636,7 @@ final class QueryBuilder
             return '';
         }
 
-        return ' ' . implode(' ', $this->joins);
+        return ' '.implode(' ', $this->joins);
     }
 
     /**
@@ -648,7 +648,7 @@ final class QueryBuilder
             return '';
         }
 
-        return ' WHERE ' . implode(
+        return ' WHERE '.implode(
             ' AND ',
             $this->wheres
         );
@@ -660,7 +660,7 @@ final class QueryBuilder
     private function createPlaceholder(
         string $prefix
     ): string {
-        return $prefix . '_' . (++$this->parameterIndex);
+        return $prefix.'_'.(++$this->parameterIndex);
     }
 
     /**
@@ -675,7 +675,7 @@ final class QueryBuilder
     private function validateIdentifier(
         string $identifier
     ): string {
-        if (!preg_match(
+        if (! preg_match(
             '/^[a-zA-Z_][a-zA-Z0-9_]*$/',
             $identifier
         )) {

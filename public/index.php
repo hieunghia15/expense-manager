@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Controllers\CategoryController;
+use App\Core\BaseModel;
 use App\Core\Config;
 use App\Core\Database;
 use App\Core\ExceptionHandler;
@@ -11,7 +12,6 @@ use App\Core\QueryBuilderFactory;
 use App\Core\Router;
 use App\Core\Session;
 use App\Core\View;
-use App\Models\CategoryModel;
 use App\Services\CategoryService;
 use Dotenv\Dotenv;
 
@@ -105,9 +105,7 @@ $view = new View(
 |--------------------------------------------------------------------------
 */
 
-$categoryModel = new CategoryModel(
-    $queryBuilderFactory
-);
+BaseModel::setFactory($queryBuilderFactory);
 
 /*
 |--------------------------------------------------------------------------
@@ -115,9 +113,7 @@ $categoryModel = new CategoryModel(
 |--------------------------------------------------------------------------
 */
 
-$categoryService = new CategoryService(
-    $categoryModel
-);
+$categoryService = new CategoryService();
 
 /*
 |--------------------------------------------------------------------------

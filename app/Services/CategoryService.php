@@ -8,33 +8,28 @@ use App\Models\CategoryModel;
 
 final class CategoryService
 {
-    public function __construct(
-        private CategoryModel $categoryModel
-    ) {}
-
     public function getCategories(): array
     {
-        return $this->categoryModel->getAll();
+        return CategoryModel::orderBy('created_at', 'DESC')->get();
     }
 
-    public function getCategory(
-        int $id
-    ): ?array {
+    public function getCategory(int $id): ?array
+    {
         if ($id <= 0) {
             return null;
         }
 
-        return $this->categoryModel->find($id);
+        return CategoryModel::find($id);
     }
 
     public function createCategory(
         string $name,
         string $type
     ): int {
-        return $this->categoryModel->create(
-            trim($name),
-            $type
-        );
+        return CategoryModel::insert([
+            'name' => trim($name),
+            'type' => $type,
+        ]);
     }
 
     public function updateCategory(
@@ -48,24 +43,21 @@ final class CategoryService
             );
         }
 
-        return $this->categoryModel->update(
-            $id,
-            trim($name),
-            $type
-        );
+        return CategoryModel::where('id', '=', $id)
+            ->update([
+                'name' => trim($name),
+                'type' => $type,
+            ]);
     }
 
-    public function deleteCategory(
-        int $id
-    ): int {
+    public function deleteCategory(int $id): int
+    {
         if ($id <= 0) {
             throw new \InvalidArgumentException(
                 'Invalid category ID.'
             );
         }
 
-        return $this->categoryModel->delete(
-            $id
-        );
+        return CategoryModel::where('id', '=', $id)->delete();
     }
 }

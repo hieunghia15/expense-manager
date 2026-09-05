@@ -29,6 +29,11 @@ final class View
         string $template,
         array $data = []
     ): string {
-        return $this->twig->render($template, $data);
+        $globals = [
+            'session' => $_SESSION ?? [],
+            'csrf_token' => Csrf::token(),
+        ];
+
+        return $this->twig->render($template, array_merge($globals, $data));
     }
 }

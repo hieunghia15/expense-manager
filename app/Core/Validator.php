@@ -100,6 +100,30 @@ final class Validator
         return $this;
     }
 
+    public function email(
+        string $field,
+        mixed $value,
+        string $message
+    ): self {
+        if (! is_string($value) || filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+            $this->errors[$field][] = $message;
+        }
+
+        return $this;
+    }
+
+    public function passwordStrength(
+        string $field,
+        mixed $value,
+        string $message
+    ): self {
+        if (! is_string($value) || preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{6,}$/', $value) !== 1) {
+            $this->errors[$field][] = $message;
+        }
+
+        return $this;
+    }
+
     public function addError(
         string $field,
         string $message

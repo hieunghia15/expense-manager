@@ -9,3 +9,5 @@ storage/cache/.gitkeep
 
 # Environment configuration
 .env
+
+scratch

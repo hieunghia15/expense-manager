@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Controllers\AuthController;
 use App\Controllers\CategoryController;
 use App\Core\BaseModel;
 use App\Core\Config;
@@ -12,7 +13,9 @@ use App\Core\QueryBuilderFactory;
 use App\Core\Router;
 use App\Core\Session;
 use App\Core\View;
+use App\Services\AuthService;
 use App\Services\CategoryService;
+use App\Services\UserService;
 use Dotenv\Dotenv;
 
 require_once __DIR__.'/../vendor/autoload.php';
@@ -114,6 +117,8 @@ BaseModel::setFactory($queryBuilderFactory);
 */
 
 $categoryService = new CategoryService;
+$userService = new UserService;
+$authService = new AuthService($userService);
 
 /*
 |--------------------------------------------------------------------------
@@ -124,6 +129,11 @@ $categoryService = new CategoryService;
 $categoryController = new CategoryController(
     $view,
     $categoryService
+);
+
+$authController = new AuthController(
+    $view,
+    $authService
 );
 
 /*
@@ -138,6 +148,7 @@ $routes = require $basePath.'/routes/web.php';
 
 $routes(
     $router,
+    $authController,
     $categoryController,
 );
 

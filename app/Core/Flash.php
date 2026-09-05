@@ -27,6 +27,7 @@ final class Flash
             [
                 'type' => $type,
                 'message' => $message,
+                'error' => $message,
             ]
         );
     }

@@ -78,7 +78,7 @@ final class AuthController extends BaseController
         Session::start();
         Session::forget('user_id');
         Session::forget('user');
-        
+
         if (session_status() === PHP_SESSION_ACTIVE) {
             session_destroy();
         }

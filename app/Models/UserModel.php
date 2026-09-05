@@ -15,4 +15,3 @@ final class UserModel extends BaseModel
         return self::where('email', '=', $email)->first();
     }
 }
-

@@ -36,4 +36,3 @@ final class LoginRequest extends FormRequest
         return (string) $this->input('password', '');
     }
 }
-

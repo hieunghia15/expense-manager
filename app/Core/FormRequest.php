@@ -66,4 +66,3 @@ abstract class FormRequest
         return $validator;
     }
 }
-

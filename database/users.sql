@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS users (
     INDEX idx_users_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Sample admin account (Password: 123admiN!)
+-- Sample admin account (Password: 123456)
 INSERT INTO users (email, password, name)
-VALUES ('admin@example.com', '$2y$12$lx0pcmkLjqr7cBV49vZmg.3UMm.fSfqUE68YZ.3tgzXcYZJBX.jl6', 'System Admin')
+VALUES ('admin@example.com', '123456', 'System Admin')
 ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP;
 
